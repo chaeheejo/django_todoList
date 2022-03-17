@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+    body{
+		background-color: #f5f5dc;
+	}
+
+	input{
+		width: 100%;
+		padding: 12px 20px;
+		margin: 8px 0;
+		box-sizing: border-box;
+	}
+
+	input::placeholder {
+	  color: #d3d3d3;
+	}
+
+	.submit{
+		background-color: #6BA3E8;
+	}
+
+	.center-column{
+		width:600px;
+		margin: 20px auto;
+		padding:20px;
+		background-color: #fff;
+		border-radius: 3px;
+		box-shadow: 6px 2px 30px 0px rgba(0,0,0,0.75);
+	}
+
+	.item-row{
+		background-color: #6c80b2;
+		margin: 10px;
+		padding: 20px;
+		border-radius: 3px;
+		color: #fff;
+		font-size: 16px;
+		box-shadow: 0px -1px 10px -4px rgba(0,0,0,0.75);
+	}
+
+	.btn-danger{
+		background-color: #ffae19;
+		border-color: #e59400;
+	}
+
+</style>
+
+<script>
+    $.ajaaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+    });
+</script>
+
+<div class = "center-column">
+
+    <form method="post" action="/">
+        {% csrf_token %}
+        {{form.title}} {#form 객체의 title 속성 출력#}
+        {{form.summary}}
+        {{form.tag}}
+        {{form.due_date}}
+        <input class="btn btn-secondary" type="submit" name="Create Task" value="등록">
+    </form>
+    <br>
+
+    <div class="todo-list">
+        {% for task in tasks %}
+        <div class="item-row">
+            {% csrf_token %}
+            <a class="btn btn-sm btn-success" href="{% url 'update_task' task.id %}">Update</a>
+            <a class="btn btn-sm btn-danger" href="{% url 'delete_task' task.id %}">Delete</a>
+            <br><br>
+            {% if task.complete == True %}
+                <strike>{{ task.title }}</strike>
+            {% else %}
+                <span>{{ task.title }}</span>
+            {% endif %}
+            <br><br>
+            <p>생성일 : {{task.created_at}}</p>
+            <p>수정일 : {{task.updated_at}}</p>
+            <p>상세 설명 : {{task.summary}}</p>
+            <p>태그 : {{task.tag}}</p>
+            <p>마감목표일 : {{task.due_date}}</p>
+            <br>
+        </div>
+        {% endfor %}
+    </div>
+</div>
